@@ -1,0 +1,17 @@
+trigger:
+- main
+
+pool: Default
+
+stages:
+- stage: buildingArtifact
+  displayName: building Artifact
+  jobs:
+  - job: publishArtifect
+    displayName: Pulish artifect
+    steps:
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\s\PyTodoBackendMonolith-main'
+        artifact: 'artifects'
+        publishLocation: 'pipeline'
