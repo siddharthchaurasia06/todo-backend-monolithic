@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # connection_string = os.getenv("CONNECTION_STRING")
-connection_string = "UPDATE CONNECTION STRING HERE"
+connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:siddbserver.database.windows.net,1433;Database=siddb;Uid=siddbserver;Pwd=Sid@12345678;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 
 app = FastAPI()
 
