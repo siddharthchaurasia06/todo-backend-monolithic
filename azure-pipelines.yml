@@ -13,5 +13,25 @@ stages:
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)\s\PyTodoBackendMonolith-main'
-        artifact: 'artifects'
+        artifact: 'artifacts'
         publishLocation: 'pipeline'
+
+- stage: deploy
+  displayName: deployment
+  jobs:
+  - deployment: downloadArtifect
+    displayName: download Artifect
+    environment:
+      name: sidEnv
+      resourceType: virtualMachine
+    strategy:
+      runOnce:
+       deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'artifacts'
+              targetPath: '$(Pipeline.Workspace)/PyTodoBackendMonolith'
+                    
+
