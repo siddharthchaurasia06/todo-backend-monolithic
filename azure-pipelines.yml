@@ -1,0 +1,51 @@
+trigger:
+- main
+
+pool: Default
+
+stages:
+- stage: buildingArtifact
+  displayName: building Artifact
+  jobs:
+  - job: publishArtifect
+    displayName: Pulish artifect
+    steps:
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)\s\PyTodoBackendMonolith-main'
+        artifact: 'artifacts'
+        publishLocation: 'pipeline'
+
+- stage: deploy
+  displayName: deployment
+  jobs:
+  - deployment: downloadArtifect
+    displayName: download Artifect
+    environment:
+      name: sidEnv
+      resourceType: virtualMachine
+    strategy:
+      runOnce:
+       deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'artifacts'
+              targetPath: '$(Pipeline.Workspace)/PyTodoBackendMonolith'
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'pip install -r requirements.txt'
+              workingDirectory: '$(Pipeline.Workspace)/PyTodoBackendMonolith'
+
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'python3 -m uvicorn app:app --host 0.0.0.0 --port 8000'
+              workingDirectory: '$(Pipeline.Workspace)/PyTodoBackendMonolith'
+          
+
+                    
+
